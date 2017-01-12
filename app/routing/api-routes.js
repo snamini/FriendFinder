@@ -1,125 +1,54 @@
-// ===============================================================================
-// LOAD DATA
-// We are linking our routes to a series of "data" sources.
-// These data sources hold arrays of information on table-data, waitinglist, etc.
-// ===============================================================================
-
+var path = require('path');
+var friends = require('../data/friends.js');
+var parser = require('body-parser');
 var friendData = require("../data/friends.js");
 
+module.exports = function(app){
+	//parser is used to help us receive/send json.
+	app.use(parser.json());
+	app.use(parser.urlencoded({extended: true}));
+	app.use(parser.text());
+	//Routing for the API
+app.post("/api/friends", function(req, res){
+	//Takes the request.body, logs it then pushes it to the friendsArr.
+	var answers = req.body;
+	console.log(answers);
+	friendData.push(answers);
+	//Creats a variable called score that holds the scorevalues of the most recently submitted request.
+	var score = answers.score;
+	var scoreLength = score.length;
+	//Variable that will later be used to hold the submitted score value so that we can compare to the score of others.
+	var totalSubmittedScore = 0;
+	// For loop that totals up the value in the submitted score array.
+	for(var i = 0; i < scoreLength; i++){
+		var scoreInt = parseInt(score[i]);
+		totalSubmittedScore += parseInt(scoreInt);
+	}
+	//Stores the friends name that has the lowest score.
+	var friendLowestName;
+	//Stores the lowest value. Starts at 50 since it cant be higher than 50.
+	var friendLowestScore=50;
 
-// ===============================================================================
-// ROUTING
-// ===============================================================================
+	//Creates the comparison between the most recently submitted friend and all others to determine who is a match.
+	for(var i = 0; i<friendData.length-1; i++){
+		var friendArrName = friendData[i].name;
+		var friendArrScore = friendData[i].score;
+		var friendScore = 0;
+		for(var j = 0; j<friendArrScore.length; j++){
+			friendScore += parseInt(friendData[i].score[j]);
+		}
+		var friendDiff = parseInt(totalSubmittedScore - friendScore);
+		friendDiff = Math.abs(friendDiff);
+		friendLowestScore = Math.abs(friendLowestScore);
+		if(friendDiff < friendLowestScore){
+			friendLowestScore = friendDiff;
+			friendLowestName = friendArrName;
+		}
+	}
+	res.send("Your friend match is "+friendLowestName+". You differed by "+friendLowestScore+" points.</p>");
+});
 
-module.exports = function(app) {
-  // API GET Requests
-  // Below code handles when users "visit" a page.
-  // In each of the below cases when a user visits a link
-  // (ex: localhost:PORT/api/admin... they are shown a JSON of the data in the table)
-  // ---------------------------------------------------------------------------
-
-  app.get("/api/friends", function(req, res) {
-    res.json(friendData);
-  });
-
-
-  // API POST Requests
-  // Below code handles when a user submits a form and thus submits data to the server.
-  // In each of the below cases, when a user submits form data (a JSON object)
-  // ...the JSON is pushed to the appropriate Javascript array
-  // (ex. User fills out a reservation request... this data is then sent to the server...
-  // Then the server saves the data to the tableData array)
-  // ---------------------------------------------------------------------------
-
-  app.post("/api/friends", function(req, res) {
-    // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
-    // It will do this by sending out the value "true" have a table
-    if (friendData) {
-      friendData.push(req.body);
-      res.json(true);
-    }
-    else {
-      res.json(false);
-    }
-  });
-
-  // ---------------------------------------------------------------------------
-  // I added this below code so you could clear out the table while working with the functionality.
-  // Don"t worry about it!
-
-  app.post("/api/clear", function() {
-    // Empty out the arrays of data
-    tableData = [];
-    waitListData = [];
-
-    console.log(tableData);
-  });
+app.get("/api/friends", function(req, res){
+	res.json(friends);
+});
 };
-
-
-
-//
-// var path = require("path");
-//
-//
-// module.exports = function(app){
-//
-//
-// var chillpeople = '';
-//
-//     app.get("/api/friends", function(req, res){
-//         res.send("friends!");
-//     });
-//
-//     // Create New Characters - takes in JSON input
-//     app.post("/api/survey", function(req, res) {
-//       var netflixScore = req.body;
-//
-//
-//         // add user to list of people who want to netflix and chill
-//
-//         // chillpeople.push(netflixScore);
-//
-//         // look up who the perfect person to nfc with is
-//
-//         //compare the 3 types and find a match
-//
-//         //return the perfect NFC buddy
-//
-//       res.json(netflixScore);
-//     });
-//
-// };
-//
-//
-// // function matchingNetflixer () {
-// //
-// // loop through all users and all users score. figure out the current user and the difference between their scores and other users. match the user with min difference between scores.)
-// //
-// // find stock picker example => {})
-// //
-// // if newUser > users[i] {
-// // }
-// //
-// // var netflixers = [
-// //
-// // {name:
-// //   scores: [1, 3, 2, 5,3,]
-// // },
-// //
-// // {
-// //
-// // }
-// //
-// // ];
-// //
-// //
-// // var newUser = {
-// //   name: talia
-// //   scores [1,2,3, 4,5,]
-// //
-// // }
-// //
-// // sumScores = (newUsers.score)
-// //
-// // for i=0; i< netflixers.length; i++

@@ -1,28 +1,17 @@
-// ===============================================================================
-// DATA
-// Below data will hold all of the reserved tables.
-// Initially we just set it equal to a "dummy" customer.
-// But you could have it be an empty array as well.
-// ===============================================================================
-
-
-var firstNetflixer = [
-  {
-    name: "Talia",
-    number: "310.740.6668",
-    Q1:
-    Q2:
-    Q3:
-    Q4:
-    Q5:
-    Q6:
-    Q7:
-    Q8:
-    Q9:
-    Q10:
-
-  }
+var friendsArr = [
+{
+	Name: 'Steve',
+	photo: '(310 740-6668)',
+  score: [ '5', '5', '5', '5', '5', '5', '5', '5', '5', '5' ]},
+{ Name: 'bryan',
+  photo: '(818)677-9382',
+  score: [ '5', '5', '5', '5', '5', '5', '5', '5', '5', '5' ] },
+{ Name: 'Danny',
+  photo: '(786)234-8673',
+  score: [ '5', '2', '3', '4', '3', '4', '4', '3', '4', '3' ] },
+{ Name: 'Wendy',
+  photo: '(949)365-4448',
+  score: [ '1', '1', '1', '1', '1', '1', '1', '1', '1', '1' ] }
 ];
 
-// Note how we export the array. This makes it accessible to other files using require.
-module.exports = firstNetflixer;
+module.exports = friendsArr;
