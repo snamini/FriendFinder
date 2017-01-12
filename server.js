@@ -15,7 +15,7 @@ var path = require("path");
 var app = express();
 
 // Sets an initial port. We"ll use this later in our listener
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 
 // BodyParser makes it possible for our server to interpret data sent to it.
